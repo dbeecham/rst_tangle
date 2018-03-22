@@ -5,14 +5,10 @@
     machine tangle;
 
     action debug {
-        write(STDOUT_FILENO, p, 1);
+        int b = write(STDOUT_FILENO, p, 1); (void)b;
     }
 
 
-
-    rst_option = '   :'
-                 (any* -- '\n')
-                 '\n';
 
     code_line = (
                     (
@@ -29,13 +25,13 @@
 
 
 
-    code_lines := code_line* @err{ fhold; fgoto main; };
+    code_lines := code_line* $err{ fhold; fgoto main; };
 
     option_lines := (
                       '\n' @{ fgoto code_lines; }
                       |
-                      '   :' (any* -- '\n') '\n'
-                   )* @err{ fhold; fgoto main; };
+                      ('   :' (any* -- '\n') '\n')
+                   )* $err{ fhold; fgoto main; };
 
     language = 'c';
 
